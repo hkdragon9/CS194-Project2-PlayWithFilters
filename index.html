@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+div.gallery {
+  border: 1px solid #ccc;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+p {
+   font-family: Helvetica, Arial, sans-serif;
+   font-size: 1.2rem;
+   line-height: 1.5;
+   word-spacing: 2px;
+}
+.row{
+  display:flex;
+  padding-bottom: 50px;
+}
+
+/*.header {
+  display:flex;
+  align-content: center;
+  justify-content: space-around;
+  padding: 10px 16px;
+  background: #555;
+  opacity: 50%;
+  color: #f1f1f1;
+}*/
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + .content {
+  padding-top: 102px;
+}
+
+.responsive {
+  display:inline-block;
+  padding: 0 6px;
+  float: left;
+  width: 33%;
+  padding-bottom: 10px;
+}
+.responsive_tif {
+  width:50%;
+  display: block;
+  margin:auto;
+}
+
+.responsive_auto {
+  width:35%;
+  display:inline-block;
+  margin:auto;
+}
+
+.responsive_self {
+  width:25%;
+  display:inline-block;
+  margin:auto;
+}
+@media only screen and (max-width: 700px) {
+  .responsive {
+    width: 49.99999%;
+    margin: 6px 0;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .responsive {
+    width: 100%;
+  }
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
+</head>
+<body style="padding-left: 150px;padding-right: 150px;padding-top: 50px;">
+
+<h1 style="text-align: center; font-size: 50px;">CS 194 Project 2: Fun with Filters and Frequencies!</h1>
+<h2 style="text-align: center; font-size: 35px;">Kenny Huang</h2>
+<!--
+<div class="header" id="myHeader">
+  <a href="#overview"><h2>Overview</h2></a>
+  <a href="#naive"><h2>Naive Approach</h2></a>
+  <a href="#pyramid"><h2>Image Pyramid Approach</h2></a>
+  <a href="#bells"><h2>Bells & Whistles</h2></a>
+</div> -->
+<div class = "content">
+<h2>Part 1.1: Finite Difference Operator</h2>
+<p>The first part is to play with the basic filter of derivatives in both x and y direction on an original cameraman image.
+
+First, I used dx = [1, -1] and dy = [1, -1].T to convolute with the original cameraman photo to get the derivative of x and y.
+ Second, I computed the magnitude of the gradient using the formula np.sqrt(dx^2 + dy^2).
+  Third, I computed the magnitude of the orientaion of the gradient using the formula np.arctan2(-dy, dx).
+ (The grdient is imploved by setting values greater than a certain threshold to 1 and 0 for values under the threshold.)</p>
+
+
+ <div class="row">
+ <div class="responsive_self">
+   <div class="gallery">
+     <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+       <img src="cameraman.png" alt="Forest" width="600" height="400">
+     </a>
+     <div class="desc">Original Image</div>
+   </div>
+ </div>
+
+ <div class="responsive_self">
+   <div class="gallery">
+     <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+       <img src="cameraman_gradX.jpg" alt="Forest" width="600" height="400">
+     </a>
+     <div class="desc">cameraman: gradient of X direction</div>
+   </div>
+ </div>
+
+ <div class="responsive_self">
+   <div class="gallery">
+     <a target="_blank" href="self_select1_naive_manual_crop.jpg">
+       <img src="cameraman_gradY.jpg" alt="Forest" width="600" height="400">
+     </a>
+     <div class="desc">cameraman: gradient of Y direction</div>
+   </div>
+ </div>
+ </div>
+ <div class="clearfix"></div>
+
+
+ <div class="row">
+ <div class="responsive_self">
+   <div class="gallery">
+     <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+       <img src="cameraman_grad_mag.jpg" alt="Forest" width="600" height="400">
+     </a>
+     <div class="desc">cameraman: gradient magnitude</div>
+   </div>
+ </div>
+
+ <div class="responsive_self">
+   <div class="gallery">
+     <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+       <img src="cameraman_edge_image.jpg" alt="Forest" width="600" height="400">
+     </a>
+     <div class="desc">cameraman: gradient magnitude binarized: an edge detection method</div>
+   </div>
+ </div>
+ </div>
+
+ <div class="clearfix"></div>
+
+
+
+<h2>Part 1.2: Derivative of Gaussian (DoG) Filter </h2>
+<p> Now we try with the blurred cameraman image below to make it less sharp.
+
+  in this section I implemented gaussian smoothing to detect the edges and reduce noise.
+   This operation consists of creating a gaussian filter, convolving it with the image, and then convolving the result with the finite difference operators from the previous part.
+   The result is slightly more blurry than the original.
+</p>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="cameraman.png" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">cameraman: original</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="cameraman_G_filtered.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">cameraman: filtered with Gaussian</div>
+  </div>
+</div>
+</div>
+
+<div class="clearfix"></div>
+
+<p> Now we want to apply the gradient mask to this blurry image. Note that we can treat both the gaussian mask and the gradient masks together as a single mask
+  due to the commutative nature of convolution. And here are our new masks(Derivative of Gaussian (DoG))
+</p>
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="gradY_DoG.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DoG, y direction</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="gradX_DoG.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DoG, x direction</div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="im_DoG_grad_mag.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">cameraman: gradient magnitude after DoG filter</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="im_DoG_edge.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">cameraman: gradient magnitude binarized after DoG filter</div>
+  </div>
+</div>
+</div>
+
+
+<p> Note that now the gradient magnitude binarized image after DoG looks like a much nice and smoother version of the one before, which is really nice!
+</p>
+
+
+
+
+<h2>Part 1.3: Image Straightening</h2>
+<p> For this part, we would like to take in an image and automatically straighten it.
+   Since most images have a preference for vertical and horizontal edges due to gravity,
+    we essentially want to check whether our edges are close to 0, 90, 180, and 270 degrees.
+     In order to do this, I tested a number of rotations (e.g. from -10 to 10 degrees for facade.jpg)for each image
+     and chose whichever rotation had the maximum count of vertical or horizontal edge pixels.
+
+Here are the results and histogram for a number of images:</p>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="facade.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">facade: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="facade_original_hist.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">facade: original: histogram </div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="facade_best_rotated.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">facade: straightened</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="facade_best_hist_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">facade: histogram with the best aligned rotation</div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="circuit.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">circuit: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="circuit_original_hist.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">circuit: original: histogram </div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="circuit_best_rotated.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">circuit: straightened</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="circuit_best_hist_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">circuit: histogram with the best aligned rotation</div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="books.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">books: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="books_original_hist.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">books: original: histogram </div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="books_best_rotated.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">books: straightened</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="books_best_hist_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">books: histogram with the best aligned rotation</div>
+  </div>
+</div>
+</div>
+
+<p> Now here is one example that fails hugely: this is a skew image of written numbers
+  At first I though this image would be one of the successful examples due to the clear edges
+  between the numbers' dark ink and the white paper. However the result surprises me.
+
+  In my opinion, one of the reason this fails horribly is that those "edges"(numbers)
+  are not edges by computer's definition. Even in human's eyes they seem to be straight and look
+  like edges, from a lower resolution, they are very just curly thick black lines that
+  have nothing to do with straightening edges. And I believe one of the ways to improve it
+  might be using the Fourier domain.
+</p>
+
+
+
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="skew.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">skew: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="skew_original_hist.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">skew: original: histogram </div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="skew_best_rotated.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">skew: straightened (really?)</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="skew_best_hist_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">skew: histogram with the best aligned rotation</div>
+  </div>
+</div>
+</div>
+
+<h2>Part 2.1: Image "Sharpening"</h2>
+<p> In this portion of the project, we are sharpening images by adding the image's
+  high frequency elements to its original image.
+
+  Remember in part 1.2, we have Gaussian filter (g), as known as the low-pass filter.
+  Naturally, if f is our original image, f * g is our blurred or image with lower frequencies and f - (f * g) would be our image with higher frequencies elements.
+
+  If we can intensify these high frequencies elements (by adding them back to the original image), we have a sharper image!
+  These operations can be combined into a single convolution operation called the unsharp mask filter: f + a(f - f * g) = f * ((1 + a)e - ag), where e is the identity filter.
+</p>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="taj.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">taj: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="test_sharpen.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">taj: sharpened </div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="blurry.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">a slightly blurry image: original</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="blurry_sharpen.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">a slightly blurry image: sharpened</div>
+  </div>
+</div>
+</div>
+
+<p> here we present another interesting example. Below on the left is a image with very high resolution (very sharp already).
+  We first blur this original image by using Gaussian filter(result is the middle image). Next we tried to re-sharpen this blurred version (the image on the right).
+  Note that even though the resharpened version is better than the blurred one, there is a huge discrepancy between it and the original.
+  This is due to the fact that this method is actually a deception: there is no additional information added, but rather only a manipulation of the already known high frequencies elements.
+  However, the blurry process (Gaussian filter in this case) always loses some information. And the end result is the discrepancy between the two images.(The difference is hard to see, you may need to zoom in.)
+</p>
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="resharpen.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">mountain: original image, already very sharp</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="blurred_resharpen.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">mountain: blurred image after Gaussian filter</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="sharpened_resharpen.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">mountain: blurred image resharpened</div>
+  </div>
+</div>
+</div>
+
+<h2>Part 2.2: Hybrid Images</h2>
+<p>Motivation: The goal of this part of the assignment is to create hybrid images using the approach described in the SIGGRAPH 2006 paper by Oliva, Torralba, and Schyns. Hybrid images are static images that change in interpretation as a function of the viewing distance. The basic idea is that high frequency tends to dominate perception when it is available, but, at a distance, only the low frequency (smooth) part of the signal can be seen.
+</p>
+
+<p>In this part, the goal is to use two images(after aligning them and cropping them) to create a hybrid image.
+  The idea is that we only keep the low frequency elements of one image and the high frequency elements of the other image.
+  The combined result would be a very interesting image that tricks our mind if observed from a different distance.
+</p>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DerekPicture.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Derek</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="nutmeg.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">nutmeg, the cat</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="DerekCat_hybrid_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">hybrid image: DerekCat</div>
+  </div>
+</div>
+</div>
+
+<p> here we present a failed example. In this exmaple, no matter how close you are to the image,
+  it is really hard to see th facial expression of president Obama. He looks angry from his mouth,
+  but he also looks funny from his eyebrows. I would consider this as a failed example becasue even though
+  we can clearly see the smily Obama from a far distance, it is ambiguous to find the proper image from a close distance.
+</p>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="laugh2.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Obama smile</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="anger.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Obama angry</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select2_naive_manual_crop.jpg">
+      <img src="ObamaExpression_hybrid_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">hybrid image: ObamaExpression</div>
+  </div>
+</div>
+</div>
+
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DT.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Trump original image: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="Obama.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Obama original image: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_hybrid_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">hybrid image: DonaldObama</div>
+  </div>
+</div>
+</div>
+
+
+<p>
+For the the above set of images, I displayed the images in the log Fourier domain.
+ The highpass Fourier image can be seen to have more high frequencies due to the spread of the points while the lowpass Fourier image points are more centered around the middle.
+</p>
+
+
+
+
+<div class="row">
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_hybrid_analysis_im1.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Trump original image: Fourier analysis</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_hybrid_analysis_im2.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Obama original image: Fourier analysis</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_hybrid_analysis_low_im2.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Trump image: Fourier analysis of low-pass filter</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_hybrid_analysis_high_im1.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Obama image: Fourier analysis of high-pass filter</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_hybrid_analysis_hybrid.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">hybrid image: Fourier analysis</div>
+  </div>
+</div>
+</div>
+
+
+
+<
+<h2>Part 2.3: Gaussian and Laplacian Stacks</h2>
+<p>In this part I implement Gaussian and Laplacian stacks.
+  The Gaussian stack was created by repeatedly applying a gaussian filter to the previous image on the stack.
+  The Laplacian stack was created by subtracting the neighboring images in the Gaussian stack.
+  In my examples below, the first row here is the Gaussian stack and the second row is the Laplacian stack.
+</p>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="lincoln.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">lincoln: original image</div>
+  </div>
+</div>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="lincoln_level_Gau_0_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">lincoln: level 0 Gaussian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="lincoln_level_Gau_1_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">lincoln: level 1 Gaussian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="lincoln_level_Gau_2_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">lincoln: level 2 Gaussian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="lincoln_level_Gau_3_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">lincoln: level 3 Gaussian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="lincoln_level_Gau_4_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">lincoln: level 4 Gaussian stack</div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="lincoln_level_Lap_0_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">lincoln: level 0 Laplacian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="lincoln_level_Lap_1_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">lincoln: level 1 Laplacian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="lincoln_level_Lap_2_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">lincoln: level 2 Laplacian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="lincoln_level_Lap_3_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">lincoln: level 3 Laplacian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="lincoln_level_Lap_4_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">lincoln: level 4 Laplacian stack</div>
+  </div>
+</div>
+</div>
+
+
+
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_hybrid_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DonaldObama_hybrid: original image</div>
+  </div>
+</div>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_level_Gau_0_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DonaldObama_hybrid: level 0 Gaussian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_level_Gau_1_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DonaldObama_hybrid: level 1 Gaussian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_level_Gau_2_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DonaldObama_hybrid: level 2 Gaussian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_level_Gau_3_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DonaldObama_hybrid: level 3 Gaussian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_level_Gau_4_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DonaldObama_hybrid: level 4 Gaussian stack</div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_level_Lap_0_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DonaldObama_hybrid: level 0 Laplacian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_level_Lap_1_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DonaldObama_hybrid: level 1 Laplacian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_level_Lap_2_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DonaldObama_hybrid: level 2 Laplacian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_level_Lap_3_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DonaldObama_hybrid: level 3 Laplacian stack</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="DonaldObama_level_Lap_4_.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">DonaldObama_hybrid: level 4 Laplacian stack</div>
+  </div>
+</div>
+</div>
+
+<h2>Part 2.4: Multiresolution Blending (a.k.a. the oraple!)</h2>
+<p>The goal of this part of the assignment is to blend two images seamlessly
+  using a multi resolution blending as described in the 1983 paper by Burt and Adelson.
+   An image spline is a smooth seam joining two image together by gently distorting them.
+    Multiresolution blending computes a gentle seam between the two images seperately at
+     each band of image frequencies, resulting in a much smoother seam
+</p>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="apple.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">apple: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="orange.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">orange: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="orapple_blend_color.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">orapple: blended image</div>
+  </div>
+</div>
+</div>
+
+<p>
+  Below is another blending example with two human images. Note that this is harder than the previous example
+  due to the fact that there are many elements in the picture that are hard to be aligned with.
+</p>
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="trump_2.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Trump: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="pence_blend.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Pence: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="trumpence_blend_color.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">trumpence: blended image</div>
+  </div>
+</div>
+</div>
+
+<p>
+  Below is a blending example with a non-linear mask: this time it is a circular mask that
+  changes a watermelon into a orangemelon!
+</p>
+
+<div class="row">
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="watermelon.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Watermelon: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="orange_2.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Orange_2: original image</div>
+  </div>
+</div>
+
+<div class="responsive_self">
+  <div class="gallery">
+    <a target="_blank" href="self_select3_naive_manual_crop.jpg">
+      <img src="orangemelon_blend_color.jpg" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Orangemelon: blended image</div>
+  </div>
+</div>
+</div>
+
+
+
+
+<div class="clearfix"></div>
+
+
+<script>
+window.onscroll = function() {myFunction()};
+
+var header = document.getElementById("myHeader");
+var sticky = header.offsetTop;
+
+function myFunction() {
+  if (window.pageYOffset > sticky) {
+    header.classList.add("sticky");
+  } else {
+    header.classList.remove("sticky");
+  }
+}
+</script>
+
+</body>
+</html>
